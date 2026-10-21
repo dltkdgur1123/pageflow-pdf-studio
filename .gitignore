@@ -4,3 +4,4 @@ test-results/
 .env*
 *.tar.gz
 .DS_Store
+.vercel/

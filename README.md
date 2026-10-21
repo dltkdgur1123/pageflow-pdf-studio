@@ -118,6 +118,12 @@ npm start
 
 위 검사는 자동화된 로직 검사입니다. 모든 브라우저·대용량 문서·OCR 인식 정확도를 보장하는 성능 인증은 아닙니다.
 
+## Vercel 배포
+
+[Deploy with Vercel](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fdltkdgur1123%2Fpageflow-pdf-studio)
+
+기존 저장소 연결은 Vercel의 **Add New → Project**에서 이 저장소를 선택합니다. 루트 디렉터리는 저장소 최상위이며, 환경변수는 필요하지 않습니다. `vercel.json`에 설치 명령, 검사·빌드 명령, 출력 폴더 `dist`가 지정되어 있습니다. Git 연결 후 `main`에 반영한 변경은 Vercel이 자동 배포합니다.
+
 ## 현재 한계
 
 - 자동 저장과 새로고침 후 작업 복구는 미지원입니다.
