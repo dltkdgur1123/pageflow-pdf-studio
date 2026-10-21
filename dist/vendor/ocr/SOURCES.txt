@@ -1,0 +1,4 @@
+Tesseract.js 6.0.1: https://github.com/naptha/tesseract.js
+Tesseract.js-core 6.0.0: https://github.com/naptha/tesseract.js-core
+Korean and English language data: https://tessdata.projectnaptha.com/4.0.0_fast/
+OCR runs locally; document content is not sent to these sources.

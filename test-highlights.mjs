@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import {textHighlightQuads,ocrSymbolBounds} from './dist/core.mjs';
+const symbols=[{text:'청',bbox:{x0:28,y0:57,x1:41,y1:73}},{text:'소',bbox:{x0:44,y0:58,x1:59,y1:71}},{text:'년',bbox:{x0:63,y0:57,x1:131,y1:73}}];
+assert.equal(ocrSymbolBounds(symbols[2],symbols).x1,78);
+assert.deepEqual(ocrSymbolBounds(symbols[0],symbols),symbols[0].bbox);
+assert.equal(ocrSymbolBounds({text:'가',bbox:{x0:0,y0:0,x1:100,y1:16}},[]).x1,16);
+const corrected=symbols.map(s=>{const b=ocrSymbolBounds(s,symbols);return {text:s.text,quad:[[b.x0,b.y0],[b.x1,b.y0],[b.x1,b.y1],[b.x0,b.y1]]};});
+assert.equal(Math.max(...textHighlightQuads(corrected,'청소년').flat().map(p=>p[0])),78);
+const quad=[[0,10],[60,10],[60,0],[0,0]];
+let result=textHighlightQuads([{text:'자비 자비송',quad}],'자비');assert.equal(result.length,2);assert.deepEqual(result[0][0],[0,10]);assert.deepEqual(result[0][1],[20,10]);
+assert.equal(textHighlightQuads([{text:'누군가',quad},{text:' 널 위해',quad}],'누군가 널').length,2);
+assert.equal(textHighlightQuads([{text:'A+B (x)',quad}],'A+B').length,1);
+assert.equal(textHighlightQuads([{text:'ＡＢＣ',quad}],'abc').length,1);
+assert.equal(textHighlightQuads([{text:'abc',quad}],'').length,0);
+assert.equal(textHighlightQuads([{text:'abc',quad}],'missing').length,0);
+const rotated=[[10,0],[10,60],[0,60],[0,0]];assert.deepEqual(textHighlightQuads([{text:'abcdef',quad:rotated}],'bc')[0],[[10,10],[10,30],[0,30],[0,10]]);
+console.log('PASS: repeated Korean terms, partial words, cross-run phrases, punctuation, normalization, rotated coordinates, empty/missing matches');

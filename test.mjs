@@ -1,0 +1,22 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import * as lib from 'pdf-lib';
+import {parseRange,moveSelection,moveBefore,buildPDF} from './dist/core.mjs';
+assert.deepEqual(parseRange('1, 3-5,3',5),[0,2,3,4]);
+for(const invalid of ['','0','-1','5-2','6','1,,2','1.5','a','1-999999999'])assert.throws(()=>parseRange(invalid,5));
+const a=['A','B','C','D'].map(id=>({id})),sel=new Set(['B','D']);
+assert.deepEqual(moveSelection(a,sel,-1).map(x=>x.id),['B','A','D','C']);
+assert.deepEqual(moveSelection(a,sel,1).map(x=>x.id),['A','C','B','D']);
+assert.deepEqual(moveBefore(a,sel,'A').map(x=>x.id),['B','D','A','C']);
+const sources=new Map();
+for(const [key,count,offset]of [['A',3,0],['B',2,10]]){const doc=await lib.PDFDocument.create();for(let i=0;i<count;i++){const p=doc.addPage([400+offset+i,500]);p.drawText(`${key}${i+1}`,{x:40,y:400});}sources.set(key,{bytes:await doc.save()});}
+const original=Buffer.from(sources.get('A').bytes);
+const pages=[{id:'b2',source:'B',index:1,rotation:90},{id:'a3',source:'A',index:2,rotation:0},{id:'a1',source:'A',index:0,rotation:0}];
+const output=await buildPDF(lib,sources,pages);const doc=await lib.PDFDocument.load(output);
+assert.equal(doc.getPageCount(),3);assert.deepEqual(doc.getPages().map(p=>p.getWidth()),[411,402,400]);assert.equal(doc.getPage(0).getRotation().angle,90);assert.deepEqual(Buffer.from(sources.get('A').bytes),original);
+const all=[...Array(3)].map((_,index)=>({source:'A',index,rotation:0})).concat([...Array(2)].map((_,index)=>({source:'B',index,rotation:0})));
+assert.equal((await lib.PDFDocument.load(await buildPDF(lib,sources,all))).getPageCount(),5);
+await assert.rejects(()=>buildPDF(lib,sources,[]));
+const code=fs.readFileSync('dist/app.js','utf8');assert.equal(/localStorage|sessionStorage|indexedDB|fetch\(/.test(code),false);
+fs.mkdirSync('test-results',{recursive:true});fs.writeFileSync('test-results/extracted.pdf',output);fs.writeFileSync('test-results/A.pdf',sources.get('A').bytes);fs.writeFileSync('test-results/B.pdf',sources.get('B').bytes);
+console.log('PASS: range validation (10 cases), stable reordering (3), two-source PDF merge/extraction, page order, rotation, immutable input, empty output rejection, no persistence/upload APIs.');

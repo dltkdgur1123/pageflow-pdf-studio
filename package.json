@@ -1,0 +1,17 @@
+{
+  "name": "pageflow-pdf-studio",
+  "version": "1.0.0",
+  "description": "Browser-local PDF workspace for organizing pages, annotations and export",
+  "scripts": {
+    "test": "node test.mjs && node test-save.mjs && node test-highlights.mjs && node test-songs.mjs && node test-restore.mjs",
+    "build": "node scripts/prepare-assets.mjs",
+    "start": "node scripts/serve.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "type": "module",
+  "dependencies": {
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^4.10.38"
+  }
+}
