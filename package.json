@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Browser-local PDF workspace for organizing pages, annotations and export",
   "scripts": {
-    "test": "node test.mjs && node test-save.mjs && node test-highlights.mjs && node test-songs.mjs && node test-restore.mjs",
+    "test": "node test.mjs && node test-save.mjs && node test-highlights.mjs && node test-songs.mjs && node test-restore.mjs && node test-images.mjs",
     "build": "node scripts/prepare-assets.mjs",
     "start": "node scripts/serve.mjs"
   },

@@ -83,3 +83,13 @@ export function restorePixels(image, brush, colourOnly=true){
  }
  return {data:result,count:count-remaining.length};
 }
+
+export async function imageToPDF(PDFLib,bytes,type){
+ const doc=await PDFLib.PDFDocument.create();
+ const image=type==='png'?await doc.embedPng(bytes):type==='jpeg'?await doc.embedJpg(bytes):null;
+ if(!image)throw new Error('지원하지 않는 이미지 형식입니다.');
+ const scale=Math.min(0.75,14400/Math.max(image.width,image.height));
+ const width=image.width*scale,height=image.height*scale;
+ const page=doc.addPage([width,height]);page.drawImage(image,{x:0,y:0,width,height});
+ return doc.save();
+}
