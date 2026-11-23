@@ -85,6 +85,8 @@ export function restorePixels(image, brush, colourOnly=true){
 }
 
 export async function imageToPDF(PDFLib,bytes,type){
+ // pdf-lib JPEG parsing reads the backing buffer from offset zero.
+ bytes=Uint8Array.from(bytes);
  const doc=await PDFLib.PDFDocument.create();
  const image=type==='png'?await doc.embedPng(bytes):type==='jpeg'?await doc.embedJpg(bytes):null;
  if(!image)throw new Error('지원하지 않는 이미지 형식입니다.');

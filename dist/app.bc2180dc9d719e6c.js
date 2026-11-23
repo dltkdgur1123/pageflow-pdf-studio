@@ -1,5 +1,5 @@
 import * as pdfjs from './vendor/pdf.mjs';
-import {parseRange,moveSelection,moveBefore,buildPDF,textHighlightQuads,ocrSymbolBounds,restorePixels,imageToPDF} from './core.2f3c6371ac3ba0b6.mjs';
+import {parseRange,moveSelection,moveBefore,buildPDF,textHighlightQuads,ocrSymbolBounds,restorePixels,imageToPDF} from './core.f57fd2b524dedb9e.mjs';
 pdfjs.GlobalWorkerOptions.workerSrc='./vendor/pdf.worker.mjs';
 const $=id=>document.getElementById(id),PDFLib=window.PDFLib;
 let outputFilename='';

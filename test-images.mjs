@@ -6,6 +6,9 @@ const sources=new Map();
 for(const [ext,type,size] of [['png','png',[480,300]],['jpg','jpeg',[300,450]]]){
  const input=readFileSync(new URL('./docs/samples/import-test.'+ext,import.meta.url));
  const original=Buffer.from(input);
+ const pooled=Buffer.alloc(input.length+32,0);input.copy(pooled,17);
+ const offsetBytes=await imageToPDF(lib,pooled.subarray(17,17+input.length),type);
+ assert.equal((await lib.PDFDocument.load(offsetBytes)).getPageCount(),1);
  const bytes=await imageToPDF(lib,input,type);const doc=await lib.PDFDocument.load(bytes);
  assert.equal(doc.getPageCount(),1);assert.deepEqual([doc.getPage(0).getWidth(),doc.getPage(0).getHeight()],size);
  assert.deepEqual(input,original);sources.set(type,{bytes});
